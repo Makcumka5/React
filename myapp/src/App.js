@@ -59,7 +59,7 @@ export class AppClass extends Component {
     return (
       <div className="app">
         <header onClick={this.props.handleClick} className="App-header">
-          hello class ^ name: {this.props.user.name}{" "}
+          yo man: {this.props.user.name}{" "}
         </header>{" "}
       </div>
     );
