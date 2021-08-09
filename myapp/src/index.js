@@ -1,21 +1,29 @@
+import { ThemeProvider, createTheme } from "@material-ui/core";
 import React from "react";
 import ReactDOM from "react-dom";
-import { App, AppClass, AppWitoutJSX } from "./App";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Chat } from "./pages";
+import "./global.css";
 
-const user = { name: "Max" };
-
-const handleClick = () => {
-  console.log("click");
-};
-
-const list = ["test1", "test2"];
+const theme = createTheme({
+  dark: {
+    color: "#000",
+  },
+  light: {
+    color: "#fff",
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App user={user} handleClick={handleClick} list={list}>
-      <h1> children app </h1>{" "}
-    </App>{" "}
-    <AppClass user={user} handleClick={handleClick} /> <AppWitoutJSX />
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <Switch>
+          <Route path="/chat" component={() => <Chat />} />
+          <Route path="*" component={() => <h1>404 page</h1>} />
+        </Switch>
+      </ThemeProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );
