@@ -7,3 +7,13 @@
   align-items: center;
   padding: 5px 15px;
 }
+
+.headerlight {
+  flex: none;
+  background-color: white;
+  border-bottom: 1px solid white;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 5px 15px;
+}

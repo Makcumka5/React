@@ -10,11 +10,11 @@ export function Header() {
   const isLightTheme = theme.name === "light";
 
   return (
-    <div className={styles.header}>
+    <div className={isLightTheme ? styles.header : styles.headerlight}>
       <Menu />
 
       <Grid style={{ color: theme.theme.color }} item={true}>
-        dark
+        light
       </Grid>
       <Grid item={true}>
         <Switch
@@ -24,7 +24,7 @@ export function Header() {
         />
       </Grid>
       <Grid style={{ color: theme.theme.color }} item={true}>
-        light
+        dark
       </Grid>
     </div>
   );
