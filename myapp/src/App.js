@@ -1,67 +1,71 @@
-import { createElement, Component } from "react";
-import "./App.css";
-import styles from "./app.module.css";
+import { Grid, makeStyles } from "@material-ui/core";
+import PropTypes from "prop-types";
+import { useState, memo } from "react";
+import { MessageList, ChatList } from "./components";
 
-export function App(props) {
-  // можно делать деструктуризацию
-  const { user, handleClick } = props;
+const useStyles = makeStyles((theme) => {
+  return {
+    root: {
+      flexGrow: 1,
+      background: theme.light.color,
+    },
+  };
+});
 
-  // инлайн стили/класические и цсс модули
-  return (
-    <div className={styles.app} style={{ border: "1px solid red" }}>
-      <header onClick={props.handleClick} className="App-header">
-        hello function <h1> name: {props.user.name} </h1>{" "}
-      </header>{" "}
-      {props.children}
-    </div>
-  );
-}
+export const App = () => {
+  const classes = useStyles();
 
-/**
-    * React element
-    * {
-    type: "div",
-    props: {
-        className: "App",
-        children: {
-            type: "header",
-            props: { className: "App-header", children: "hello function" }
-        }
-    }
-    * }
-    */
+  const [list, setList] = useState([
+    { user: "ad" },
+    { user: "c" },
+    { user: "bdd" },
+  ]);
 
-// компонент без jsx
-export const AppWitoutJSX = () =>
-  createElement(
-    "div",
-    { className: "App" },
-    createElement(
-      "header",
-      { className: "App -header" },
-      "hello function AppWitoutJSX"
-    )
-  );
-
-export class AppClass extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      a: 12,
-    };
-  }
-
-  // state = {
-  //   a: 12,
-  // };
-
-  render() {
-    return (
-      <div className="app">
-        <header onClick={this.props.handleClick} className="App-header">
-          hello class ^ name: {this.props.user.name}{" "}
-        </header>{" "}
-      </div>
+  const sortA = () => {
+    setList((state) =>
+      [...state].sort((a, b) => a.user.length - b.user.length)
     );
-  }
-}
+  };
+
+  const sortB = () => {
+    setList((state) =>
+      [...state].sort((a, b) => b.user.length - a.user.length)
+    );
+  };
+
+  return (
+    <>
+      <div className={classes.root}>
+        <Grid container={true} spacing={3}>
+          <Grid item={true} xs={6}>
+            <ChatList />
+          </Grid>
+          <Grid item={true} xs={6}>
+            <MessageList />
+          </Grid>
+        </Grid>
+      </div>
+
+      <button onClick={sortA}>sort a</button>
+      <button onClick={sortB}>sort b</button>
+
+      {list.map((user) => (
+        <User key={user.user} user={user} />
+      ))}
+    </>
+  );
+};
+
+const User = memo(({ user }) => {
+  console.log(":render");
+  return <h2 style={{ display: "block" }}>{user.user}</h2>;
+});
+
+App.propTypes = {
+  count: PropTypes.number.isRequired,
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+    })
+  ).isRequired,
+};
