@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { handleChangeMessageValue } from "../../store/conversations";
-import { sendMessageWithThunk } from "../../store/messages";
+import { sendMessageWithThunk, editMessageThunk } from "../../store/messages";
 import { Message } from "./message";
 import styles from "./message-list.module.css";
 
@@ -27,6 +27,11 @@ export const MessageList = () => {
   const messages = useSelector((state) => {
     return state.messages.messages[roomId] || [];
   });
+
+  const updateMessageId = useSelector((state) => {
+    return state.conversations.updateMessageId;
+  });
+
   const value = useSelector((state) => {
     return (
       state.conversations.conversations.find(
@@ -39,6 +44,11 @@ export const MessageList = () => {
 
   const handleSendMessage = () => {
     if (value) {
+      if (updateMessageId) {
+        dispatch(editMessageThunk(value, roomId, updateMessageId));
+        return;
+      }
+
       dispatch(
         sendMessageWithThunk({ author: "User", message: value }, roomId)
       );
@@ -65,16 +75,16 @@ export const MessageList = () => {
     <>
       <div ref={ref}>
         {messages.map((message, id) => (
-          <Message key={id} {...message} />
+          <Message key={id} message={message} />
         ))}
       </div>
 
       <Input
         className={s.input}
         value={value}
-        onChange={(e) =>
-          dispatch(handleChangeMessageValue(e.target.value, roomId))
-        }
+        onChange={(e) => {
+          dispatch(handleChangeMessageValue(e.target.value, roomId));
+        }}
         onKeyPress={handlePressInput}
         fullWidth={true}
         placeholder="Введите сообщение..."
